@@ -15,152 +15,135 @@ DOC
 )
 MARK_AS_ADVANCED(PLANTUML_PATH)
 
-IF(PLANTUML_PATH STREQUAL "PLANTUML_PATH-NOTFOUND")
-	SET(@PROJECT_NAME@_plantuml_FOUND FALSE CACHE BOOL "cmake-doxygen with PlantUML")
-ELSE()
-	SET(@PROJECT_NAME@_plantuml_FOUND TRUE CACHE BOOL "cmake-doxygen with PlantUML")
-ENDIF()
+SET(@PROJECT_NAME@_plantuml_FOUND CACHE BOOL "@PROJECT_NAME@ with PlantUML")
 MARK_AS_ADVANCED(@PROJECT_NAME@_plantuml_FOUND)
-
-SET(@PROJECT_NAME@_datetime_FOUND TRUE CACHE BOOL "cmake-doxygen with datetime")
-MARK_AS_ADVANCED(@PROJECT_NAME@_datetime_FOUND)
-
-CHECK_REQUIRED_COMPONENTS(cmake-doxygen)
-
-IF(@PROJECT_NAME@_FOUND AND @PROJECT_NAME@_FIND_COMPONENTS)
-	MESSAGE(STATUS "Found cmake-doxygen: ${CMAKE_CURRENT_LIST_DIR} (found version \"${@PROJECT_NAME@_VERSION}\")")
-	MESSAGE(STATUS "Found the following cmake-doxygen components:")
-
-	FOREACH(comp ${@PROJECT_NAME@_FIND_COMPONENTS})
-	MESSAGE(STATUS "   ${comp}")
-	ENDFOREACH()
+IF(PLANTUML_PATH STREQUAL "PLANTUML_PATH-NOTFOUND")
+	SET(@PROJECT_NAME@_plantuml_FOUND FALSE)
+ELSE()
+	SET(@PROJECT_NAME@_plantuml_FOUND TRUE)
 ENDIF()
 
-FUNCTION(DOXYGEN)
-	########################################
-	# parse and validate arguments
-	########################################
+CHECK_REQUIRED_COMPONENTS(@PROJECT_NAME@)
 
-	# single value options
-	SET(VAL_LIST
-	OUTPUT_DIRECTORY
-	TAB_SIZE
-	DOT_FONTSIZE
-	DOT_IMAGE_FORMAT
-	USE_MDFILE_AS_MAINPAGE
-	)
+IF(@PROJECT_NAME@_FOUND)
+	MESSAGE(STATUS "Found @PROJECT_NAME@: ${CMAKE_CURRENT_LIST_DIR} (found version \"${@PROJECT_NAME@_VERSION}\")")
 
-	# multiple value options
-	SET(VALS_LIST
-	PREDEFINED
-	EXCLUDE_SYMBOLS
-	)
+	IF(@PROJECT_NAME@_FIND_COMPONENTS)
+		MESSAGE(STATUS "Found the following @PROJECT_NAME@ components:")
 
-	# special options (processing this separately)
-	SET(SPEC_LIST
-	SOURCES
-	YES
-	NO
-	)
-
-	# parse arguments
-	LIST(APPEND SPEC_LIST ${VALS_LIST})
-	CMAKE_PARSE_ARGUMENTS(DOXY "" "${VAL_LIST}" "${SPEC_LIST}" ${ARGN})
-
-	# verify required arguments
-	IF(NOT DOXY_SOURCES)
-		MESSAGE(FATAL_ERROR "Please specify SOURCES!")
+		FOREACH(comp ${@PROJECT_NAME@_FIND_COMPONENTS})
+			MESSAGE(STATUS "   ${comp}")
+		ENDFOREACH()
 	ENDIF()
 
-	IF(NOT DOXY_OUTPUT_DIRECTORY)
-		MESSAGE(FATAL_ERROR "Please specify OUTPUT_DIRECTORY!")
-	ENDIF()
+	FUNCTION(DOXYGEN)
+		# single value options
+		SET(VAL_LIST
+			DOT_FONTSIZE
+			DOT_IMAGE_FORMAT
+			OUTPUT_DIRECTORY
+			TAB_SIZE
+			USE_MDFILE_AS_MAINPAGE
+		)
 
-	# fix sources, if mainpage has markdown syntax
-	IF(DOXY_USE_MDFILE_AS_MAINPAGE)
-		LIST(APPEND DOXY_SOURCES "${DOXY_USE_MDFILE_AS_MAINPAGE}")
-	ENDIF()
+		# multiple value options
+		SET(VALS_LIST
+			EXCLUDE_SYMBOLS
+			PREDEFINED
+		)
 
-	########################################
-	# prepare Doxyfile
-	########################################
+		# special options (processing this separately)
+		SET(SPEC_LIST
+			NO
+			SOURCES
+			TARGET
+			YES
+		)
 
-	# common settings
-	SET(DOXYFILE "${DOXY_OUTPUT_DIRECTORY}/Doxyfile")
-	FILE(WRITE "${DOXYFILE}"  "PROJECT_NAME = ${PROJECT_NAME}\n")
-	FILE(APPEND "${DOXYFILE}" "STRIP_FROM_INC_PATH = ${CMAKE_CURRENT_SOURCE_DIR}\n")
-	FILE(APPEND "${DOXYFILE}" "STRIP_FROM_PATH = ${CMAKE_CURRENT_SOURCE_DIR}\n")
+		CMAKE_PARSE_ARGUMENTS(DOXY "" "${VAL_LIST}" "${SPEC_LIST};${VALS_LIST}" ${ARGN})
 
-	# optional setting
-	IF(PROJECT_VERSION)
-		FILE(APPEND "${DOXYFILE}" "PROJECT_NUMBER = ${PROJECT_VERSION}\n")
-	ENDIF()
+		# verify required arguments
+		IF(NOT DOXY_TARGET)
+			MESSAGE(FATAL_ERROR "Please specify TARGET!")
+		ENDIF()
 
-	IF(@PROJECT_NAME@_datetime_FOUND)
-		# add @date aliases
+		IF(NOT DOXY_SOURCES)
+			MESSAGE(FATAL_ERROR "Please specify SOURCES!")
+		ENDIF()
+
+		IF(NOT DOXY_OUTPUT_DIRECTORY)
+			MESSAGE(FATAL_ERROR "Please specify OUTPUT_DIRECTORY!")
+		ENDIF()
+
+		# fix sources, if mainpage in markdown
+		IF(DOXY_USE_MDFILE_AS_MAINPAGE)
+			LIST(APPEND DOXY_SOURCES "${DOXY_USE_MDFILE_AS_MAINPAGE}")
+		ENDIF()
+
+		# common Doxygen settings
+		SET(DOXYFILE "${DOXY_OUTPUT_DIRECTORY}.Doxyfile")
+		FILE(WRITE "${DOXYFILE}" "PROJECT_NAME = ${PROJECT_NAME}\n")
+		FILE(APPEND "${DOXYFILE}" "STRIP_FROM_INC_PATH = ${CMAKE_CURRENT_SOURCE_DIR}\n")
+		FILE(APPEND "${DOXYFILE}" "STRIP_FROM_PATH = ${CMAKE_CURRENT_SOURCE_DIR}\n")
+
+		IF(PROJECT_VERSION)
+			FILE(APPEND "${DOXYFILE}" "PROJECT_NUMBER = ${PROJECT_VERSION}\n")
+		ENDIF()
+
 		STRING(TIMESTAMP DATE "%Y.%m.%d" UTC)
 		FILE(APPEND "${DOXYFILE}" "ALIASES += date=\"${DATE}\"\n")
 
-		# add @time aliases
-		STRING(TIMESTAMP NOW "%H:%M:%S" UTC)
-		FILE(APPEND "${DOXYFILE}" "ALIASES += now=\"${NOW}\"\n")
+		STRING(TIMESTAMP TIME "%H:%M:%S" UTC)
+		FILE(APPEND "${DOXYFILE}" "ALIASES += time=\"${TIME}\"\n")
 
-		# add @now aliases
 		STRING(TIMESTAMP NOW "%Y.%m.%d %H:%M:%S" UTC)
 		FILE(APPEND "${DOXYFILE}" "ALIASES += now=\"${NOW}\"\n")
-	ENDIF()
 
-	IF(@PROJECT_NAME@_plantuml_FOUND)
-		FILE(APPEND "${DOXYFILE}" "PLANTUML_JAR_PATH = \"${PLANTUML_PATH}\"\n")
-	ENDIF()
+		IF(@PROJECT_NAME@_plantuml_FOUND)
+			FILE(APPEND "${DOXYFILE}" "PLANTUML_JAR_PATH = \"${PLANTUML_PATH}\"\n")
+		ENDIF()
 
-	# dump YES settings
-	FOREACH(OPT ${DOXY_YES})
-		FILE(APPEND "${DOXYFILE}" "${OPT} = YES\n")
-	ENDFOREACH()
-
-	# dump NO settings
-	FOREACH(OPT ${DOXY_NO})
-		FILE(APPEND "${DOXYFILE}" "${OPT} = NO\n")
-	ENDFOREACH()
-
-	# dump options with value
-	FOREACH(OPT ${VAL_LIST})
-		FILE(APPEND "${DOXYFILE}" "${OPT} = ${DOXY_${OPT}}\n")
-	ENDFOREACH()
-
-	# dump options with values
-	FOREACH(OPT ${VALS_LIST})
-		FILE(APPEND "${DOXYFILE}" "${OPT} =")
-
-		# write values into single line
-		FOREACH(VAL ${DOXY_${OPT}})
-			FILE(APPEND "${DOXYFILE}" " ${VAL}")
+		FOREACH(OPT ${DOXY_YES})
+			FILE(APPEND "${DOXYFILE}" "${OPT} = YES\n")
 		ENDFOREACH()
 
+		FOREACH(OPT ${DOXY_NO})
+			FILE(APPEND "${DOXYFILE}" "${OPT} = NO\n")
+		ENDFOREACH()
+
+		FOREACH(OPT ${VAL_LIST})
+			FILE(APPEND "${DOXYFILE}" "${OPT} = ${DOXY_${OPT}}\n")
+		ENDFOREACH()
+
+		FOREACH(OPT ${VALS_LIST})
+			FILE(APPEND "${DOXYFILE}" "${OPT} =")
+
+			# write values into single line
+			FOREACH(VAL ${DOXY_${OPT}})
+				FILE(APPEND "${DOXYFILE}" " ${VAL}")
+			ENDFOREACH()
+
+			FILE(APPEND "${DOXYFILE}" "\n")
+		ENDFOREACH()
+
+		FILE(APPEND "${DOXYFILE}" "INPUT =")
+		FOREACH(SRC ${DOXY_SOURCES})
+			FILE(APPEND "${DOXYFILE}" " \"${SRC}\"")
+		ENDFOREACH()
 		FILE(APPEND "${DOXYFILE}" "\n")
-	ENDFOREACH()
 
-	# convert source list to string
-	FILE(APPEND "${DOXYFILE}" "INPUT =")
-	FOREACH(SRC ${DOXY_SOURCES})
-		# qoute filepath
-		FILE(APPEND "${DOXYFILE}" " \"${SRC}\"")
-	ENDFOREACH()
-	FILE(APPEND "${DOXYFILE}" "\n")
+		FILE(MAKE_DIRECTORY "${DOXY_OUTPUT_DIRECTORY}")
 
-	########################################
-	# Add Doxygen target
-	########################################
-	ADD_CUSTOM_TARGET(${PROJECT_NAME}_doc ALL
-	COMMAND
-		"${DOXYGEN_EXECUTABLE}" "${DOXYFILE}"
-	WORKING_DIRECTORY
-		${DOXY_OUTPUT_DIRECTORY}
-	COMMENT
-		"Generating API documentation with Doxygen"
-	SOURCES
-		"${DOXYFILE}"
-		${DOXY_SOURCES}
-	)
-ENDFUNCTION()
+		ADD_CUSTOM_TARGET("${DOXY_TARGET}" ALL
+		COMMAND
+			"${DOXYGEN_EXECUTABLE}" "${DOXYFILE}"
+		WORKING_DIRECTORY
+			"${DOXY_OUTPUT_DIRECTORY}"
+		COMMENT
+			"Generating API documentation with Doxygen"
+		SOURCES
+			"${DOXYFILE}"
+			${DOXY_SOURCES}
+		)
+	ENDFUNCTION()
+ENDIF()
