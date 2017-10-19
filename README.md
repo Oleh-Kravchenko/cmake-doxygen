@@ -98,6 +98,15 @@ Just add in yours CMakeLists.txt
 		-DCMAKE_INSTALL_INCLUDEDIR:PATH=${CMAKE_INSTALL_INCLUDEDIR}
 		-DCMAKE_INSTALL_DATAROOTDIR:PATH=${CMAKE_INSTALL_DATAROOTDIR})
 
+## Install from sources
+
+	$ git clone https://github.com/Oleh-Kravchenko/cmake-doxygen.git
+	$ cd cmake-doxygen
+	$ mkdir build
+	$ cd build
+	$ cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+	$ sudo make install
+
 ## Yocto
 
 Please use recipe contrib/yocto/cmake-doxygen_git.bb
