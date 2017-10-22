@@ -63,6 +63,7 @@ FUNCTION(DOXYGEN)
 		NO
 		SOURCES
 		TARGET
+		EXCLUDE_DIRS
 		YES
 	)
 
@@ -138,6 +139,12 @@ FUNCTION(DOXYGEN)
 		ENDFOREACH()
 
 		FILE(APPEND "${DOXYFILE}" "\n")
+	ENDFOREACH()
+
+	# For some reason, space separation does not work.
+	# Adding every path to "EXCLUDE" will make the trick.
+	FOREACH(EXCLUDE ${EXCLUDE_DIRS})
+		FILE(APPEND "${DOXYFILE}" "EXCLUDE += ${EXCLUDE}\n")
 	ENDFOREACH()
 
 	FILE(APPEND "${DOXYFILE}" "INPUT =")
