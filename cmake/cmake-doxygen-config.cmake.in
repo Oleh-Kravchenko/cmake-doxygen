@@ -60,10 +60,10 @@ FUNCTION(DOXYGEN)
 
 	# special options (processing this separately)
 	SET(SPEC_LIST
+		EXCLUDE_DIRS
 		NO
 		SOURCES
 		TARGET
-		EXCLUDE_DIRS
 		YES
 	)
 
@@ -126,6 +126,14 @@ FUNCTION(DOXYGEN)
 		FILE(APPEND "${DOXYFILE}" "${OPT} = NO\n")
 	ENDFOREACH()
 
+	IF(DOXY_EXCLUDE_DIRS)
+		FILE(APPEND "${DOXYFILE}" "EXCLUDE =")
+		FOREACH(EXCLUDE ${DOXY_EXCLUDE_DIRS})
+			FILE(APPEND "${DOXYFILE}" " \"${EXCLUDE}\"")
+		ENDFOREACH()
+		FILE(APPEND "${DOXYFILE}" "\n")
+	ENDIF
+
 	FOREACH(OPT ${VAL_LIST})
 		FILE(APPEND "${DOXYFILE}" "${OPT} = ${DOXY_${OPT}}\n")
 	ENDFOREACH()
@@ -139,12 +147,6 @@ FUNCTION(DOXYGEN)
 		ENDFOREACH()
 
 		FILE(APPEND "${DOXYFILE}" "\n")
-	ENDFOREACH()
-
-	# For some reason, space separation does not work.
-	# Adding every path to "EXCLUDE" will make the trick.
-	FOREACH(EXCLUDE ${EXCLUDE_DIRS})
-		FILE(APPEND "${DOXYFILE}" "EXCLUDE += ${EXCLUDE}\n")
 	ENDFOREACH()
 
 	FILE(APPEND "${DOXYFILE}" "INPUT =")
