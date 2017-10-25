@@ -1,4 +1,5 @@
 SUMMARY = "Easy Doxygen integration with CMake"
+SECTION = "devel"
 HOMEPAGE = "https://github.com/Oleh-Kravchenko/cmake-doxygen"
 BUGTRACKER = "https://github.com/Oleh-Kravchenko/cmake-doxygen/issues"
 
@@ -12,6 +13,6 @@ S = "${WORKDIR}/git"
 inherit allarch cmake
 
 PACKAGES = "${PN}-dev"
-RDEPENDS_${PN}-dev = "${BPN}-dev"
+RDEPENDS_${PN}-dev = "${PN}-dev"
 
 FILES_${PN}-dev += " ${libdir}/cmake"
