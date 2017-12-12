@@ -9,6 +9,10 @@ Additionally this script make available next macros:
 * @now - build date and time %Y.%m.%d %H:%M:%S
 * @startuml,@enduml - see [PlantUML](http://plantuml.com)
 
+# Continuous Integration
+
+- Travis CI [![build status](https://travis-ci.org/Oleh-Kravchenko/cmake-doxygen.svg)](https://travis-ci.org/Oleh-Kravchenko/cmake-doxygen)
+
 # Syntax
 
 	DOXYGEN(TARGET name
