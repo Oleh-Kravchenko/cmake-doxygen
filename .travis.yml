@@ -1,0 +1,7 @@
+language: c
+script:
+- mkdir -p build && cd build
+- rm -rf /tmp/install_root
+- cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tmp/install_root ..
+- make install
+- rm -rf /tmp/install_root
