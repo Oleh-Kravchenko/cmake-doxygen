@@ -12,6 +12,7 @@ Additionally this script make available next macros:
 # Continuous Integration
 
 - Travis CI [![build status](https://travis-ci.org/Oleh-Kravchenko/cmake-doxygen.svg)](https://travis-ci.org/Oleh-Kravchenko/cmake-doxygen)
+- Coverage [![Coverage Status](https://coveralls.io/repos/github/Oleh-Kravchenko/cmake-doxygen/badge.svg?branch=master)](https://coveralls.io/github/Oleh-Kravchenko/cmake-doxygen?branch=master)
 
 # Syntax
 
