@@ -16,4 +16,4 @@ inherit allarch cmake
 PACKAGES = "${PN}-dev"
 RDEPENDS_${PN}-dev = "${PN}-dev"
 
-FILES_${PN}-dev += " ${libdir}/cmake"
+FILES_${PN}-dev += "${libdir}/cmake"
