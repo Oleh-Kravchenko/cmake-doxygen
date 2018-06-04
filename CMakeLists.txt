@@ -1,14 +1,16 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 CMAKE_POLICY(SET CMP0048 NEW)
 
-PROJECT(cmake-doxygen
-VERSION
-	0.0.3
-LANGUAGES
-	NONE)
+PROJECT(cmake-doxygen NONE)
 
 INCLUDE(CMakePackageConfigHelpers)
 INCLUDE(GNUInstallDirs)
+
+FIND_PACKAGE(cmake-version4git 0.0 QUIET)
+IF(NOT cmake-version4git_FOUND)
+	INCLUDE(3rdparty/cmake-version4git/cmake/cmake-version4git.cmake)
+ENDIF()
+PROJECT_VERSION_FROM_GIT()
 
 SET(PROJECT_CONFIG_PREFIX
 	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config")
