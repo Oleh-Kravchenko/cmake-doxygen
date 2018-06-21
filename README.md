@@ -16,6 +16,8 @@ Additionally this script make available next macros:
 
 # Syntax
 
+	FIND_PACKAGE(cmake-doxygen REQUIRED [COMPONENTS plantuml])
+
 	DOXYGEN(TARGET name
 	DOT_FONTSIZE integer
 	DOT_IMAGE_FORMAT svg|png
