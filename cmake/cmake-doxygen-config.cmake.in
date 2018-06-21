@@ -3,6 +3,26 @@
 SET(@PROJECT_NAME@_FOUND TRUE)
 MARK_AS_ADVANCED(@PROJECT_NAME@_FOUND)
 
+IF(NOT Doxygen_FOUND)
+	# Handle special case when Doxygen is not present on host machine
+	# and REQUIRED keyword is not specified for current module.
+	UNSET(@PROJECT_NAME@_FindDoxygen)
+	IF(@PROJECT_NAME@_FIND_REQUIRED)
+		LIST(REMOVE @PROJECT_NAME@_FindDoxygen REQUIRED)
+	ENDIF()
+
+	# Passing QUIET to FindDoxygen, if it was specified for current module.
+	IF(@PROJECT_NAME@_FIND_QUIETLY)
+		LIST(APPEND @PROJECT_NAME@_FindDoxygen QUIET)
+	ENDIF()
+
+	FIND_PACKAGE(Doxygen ${@PROJECT_NAME@_FindDoxygen})
+	IF(NOT Doxygen_FOUND)
+		SET(@PROJECT_NAME@_FOUND FALSE)
+		RETURN()
+	ENDIF()
+ENDIF()
+
 INCLUDE("${CMAKE_CURRENT_LIST_DIR}/cmake-doxygen.cmake")
 
 IF(NOT PLANTUML_PATH STREQUAL "PLANTUML_PATH-NOTFOUND")
