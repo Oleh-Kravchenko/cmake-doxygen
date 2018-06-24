@@ -1,8 +1,5 @@
 @PACKAGE_INIT@
 
-SET(@PROJECT_NAME@_FOUND TRUE)
-MARK_AS_ADVANCED(@PROJECT_NAME@_FOUND)
-
 IF(NOT Doxygen_FOUND)
 	# Handle special case when Doxygen is not present on host machine
 	# and REQUIRED keyword is not specified for current module.
