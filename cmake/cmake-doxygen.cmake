@@ -11,6 +11,7 @@ PATH_SUFFIXES
 	"bin"
 	"lib"
 	"share"
+	"java"
 DOC
 	"PlantUML path (plantuml.jar)")
 
