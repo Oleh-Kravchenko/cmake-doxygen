@@ -6,12 +6,13 @@ FIND_PATH(PLANTUML_PATH "plantuml.jar"
 PATHS
 	"/usr"
 	"/usr/local"
-	"/usr/share/plantuml"
+	"/usr/share"
 PATH_SUFFIXES
 	"bin"
 	"lib"
 	"share"
 	"java"
+	"plantuml"
 DOC
 	"PlantUML path (plantuml.jar)")
 
