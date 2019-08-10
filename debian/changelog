@@ -1,0 +1,5 @@
+cmake-doxygen (0.0.43) experimental; urgency=low
+
+  * Initial release
+
+ -- Oleh Kravchenko <oleg@kaa.org.ua>  Wed, 27 Mar 2019 19:34:22 +0200

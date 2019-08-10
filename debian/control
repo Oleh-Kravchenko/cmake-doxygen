@@ -1,0 +1,11 @@
+Source: cmake-doxygen
+Section: devel
+Priority: optional
+Maintainer: Oleh Kravchenko <oleg@kaa.org.ua>
+Build-Depends: cmake, git
+Homepage: https://gitlab.com/Oleh-Kravchenko/cmake-doxygen
+
+Package: cmake-doxygen
+Architecture: all
+Depends: cmake, doxygen
+Description: Easy Doxygen integration with CMake
