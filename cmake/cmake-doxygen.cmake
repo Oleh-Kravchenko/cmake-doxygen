@@ -7,6 +7,7 @@ PATHS
 	"/usr"
 	"/usr/local"
 	"/usr/share"
+	"/usr/share/plantuml"
 PATH_SUFFIXES
 	"bin"
 	"lib"
@@ -88,7 +89,7 @@ FUNCTION(DOXYGEN)
 	STRING(TIMESTAMP NOW "%Y.%m.%d %H:%M:%S" UTC)
 	FILE(APPEND "${DOXYFILE}" "ALIASES += now=\"${NOW}\"\n")
 
-	IF(NOT PLANTUML_PATH STREQUAL "PLANTUML_PATH-NOTFOUND")
+	IF(PLANTUML_PATH)
 		FILE(APPEND "${DOXYFILE}"
 			"PLANTUML_JAR_PATH = \"${PLANTUML_PATH}\"\n")
 	ENDIF()
