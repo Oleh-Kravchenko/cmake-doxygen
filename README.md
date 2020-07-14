@@ -88,7 +88,7 @@ Add submodule
 
 Add into your CMakeLists.txt file
 
-	INCLUDE(3rdparty/cmake-version4git/cmake/cmake-doxygen.cmake)
+	INCLUDE(3rdparty/cmake-doxygen/cmake/cmake-doxygen.cmake)
 
 	DOXYGEN(TARGET "doc"
 	OUTPUT_DIRECTORY
